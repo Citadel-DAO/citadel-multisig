@@ -93,7 +93,15 @@ ADDRESSES_ETH = {
     },
     "governance": "0xa95ecbDc51082ED2a2D078a5dE5275777dD73347",
     "treasuryVault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
-    "policyOps": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416"
+    "policyOps": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",
+    "funding": {
+        "cvx":"0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
+        "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435"
+    },
+    "tokens":{
+        "cvx":"0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+        "wbtc":"0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+    }
 }
 
 
