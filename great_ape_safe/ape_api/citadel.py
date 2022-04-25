@@ -1,15 +1,5 @@
-import json
-import os
-import requests
-from decimal import Decimal
-
-from brownie import chain, interface, ZERO_ADDRESS
-from brownie.exceptions import VirtualMachineError
-from eth_abi import encode_abi
-# from helpers.constants import AddressZero
-
+from brownie import interface
 from helpers.addresses import registry
-from rich.console import Console
 
 class Citadel():
     """
@@ -38,3 +28,6 @@ class Citadel():
     def set_discounts(self, discounts):
         for token, discount in discounts.items():
             self.set_discount(discount, token)
+
+    def set_asset_price_bounds(self, min_price, max_price, token):
+        self.funding_contracts[token].setCitadelAssetPriceBounds(min_price, max_price)
