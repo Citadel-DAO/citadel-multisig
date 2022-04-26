@@ -7,7 +7,6 @@ DISCOUNT = 4000
 def main():
     safe = GreatApeSafe(registry.eth.policy_ops)
     safe.init_citadel()
-    assert safe.citadel.set_discount() == 0
     safe.citadel.set_discount(
         DISCOUNT,
         registry.eth.tokens.cvx
