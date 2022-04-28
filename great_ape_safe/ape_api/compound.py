@@ -3,11 +3,13 @@ from helpers.addresses import registry
 
 class Compound():
     def __init__(self, safe):
-        self.safe           = safe
+        self.safe = safe
+
         # tokens
-        self.comp           = safe.contract(registry.eth.treasury_tokens.COMP)
+        self.comp = safe.contract(registry.eth.tokens.comp)
+
         # contracts
-        self.comptroller    = safe.contract(registry.eth.compound.comptroller)
+        self.comptroller = safe.contract(registry.eth.compound.comptroller)
 
 
     def deposit(self, underlying, mantissa):

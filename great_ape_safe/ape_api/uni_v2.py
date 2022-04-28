@@ -1,13 +1,15 @@
-from brownie import accounts, interface, web3, network
-from helpers.addresses import registry
+from brownie import accounts, interface, web3
 from sympy import Symbol
 from sympy.solvers import solve
+
+from helpers.addresses import registry
+
 
 class UniV2:
     def __init__(self, safe):
         self.safe = safe
-        self.router = self.safe.contract(registry.eth.uniswap.routerV2)
-        self.factory = self.safe.contract(registry.eth.uniswap.factoryV2)
+        self.router = self.safe.contract(registry.eth.uniswap.router_v2)
+        self.factory = self.safe.contract(registry.eth.uniswap.factory_v2)
 
     max_slippage = 0.02
     max_weth_unwrap = 0.01

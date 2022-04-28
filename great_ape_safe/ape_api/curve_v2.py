@@ -7,8 +7,10 @@ from helpers.addresses import registry
 class CurveV2(Curve):
     def __init__(self, safe):
         self.safe = safe
+
         # tokens
-        self.crv = interface.ERC20(registry.eth.treasury_tokens.CRV)
+        self.crv = interface.ERC20(registry.eth.treasury_tokens.crv)
+
         # contracts
         self.provider = safe.contract(registry.eth.curve.provider)
         self.registry = safe.contract(self.provider.get_registry())
@@ -17,6 +19,7 @@ class CurveV2(Curve):
         self.factory_registry = safe.contract(self.provider.get_address(3))
         self.crypto_registry = safe.contract(self.provider.get_address(5))
         self.factory_crypto_registry = safe.contract(registry.eth.curve.factory)
+
         # parameters
         self.max_slippage_and_fees = .02
         self.is_v2 = True

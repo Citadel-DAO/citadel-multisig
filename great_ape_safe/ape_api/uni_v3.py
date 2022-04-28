@@ -27,10 +27,10 @@ class UniV3:
 
         # contracts
         self.nonfungible_position_manager = interface.INonFungiblePositionManager(
-            registry.eth.uniswap.NonfungiblePositionManager, owner=self.safe.account
+            registry.eth.uniswap.nfp_manager, owner=self.safe.account
         )
         self.factory = interface.IUniswapV3Factory(
-            registry.eth.uniswap.factoryV3, owner=self.safe.account
+            registry.eth.uniswap.factory_v3, owner=self.safe.account
         )
         self.v3pool_wbtc_badger = interface.IUniswapV3Pool(
             registry.eth.uniswap.v3pool_wbtc_badger, owner=self.safe.account
@@ -41,6 +41,7 @@ class UniV3:
         self.deadline = 60 * 180
         self.slippage = 0.98
 
+
     def _get_pool(self, position):
         return interface.IUniswapV3Pool(
             self.factory.getPool(
@@ -48,6 +49,7 @@ class UniV3:
             ),
             owner=self.safe.account,
         )
+
 
     def burn_token_id(self, token_id, burn_nft=False):
         """
@@ -103,6 +105,7 @@ class UniV3:
             # needs to be liq = 0, cleared the pos, otherwise will revert!
             self.nonfungible_position_manager.burn(token_id)
 
+
     def collect_fee(self, token_id):
         """
         collect fees for individual token_id
@@ -112,6 +115,7 @@ class UniV3:
         params = (token_id, self.safe.address, self.Q128 - 1, self.Q128 - 1)
 
         self.nonfungible_position_manager.collect(params)
+
 
     def collect_fees(self):
         """
@@ -145,6 +149,7 @@ class UniV3:
                 assert token1.balanceOf(self.safe.address) > token1_bal_init
         else:
             print(f" === Safe ({self.safe.address}) does not own any NFT === ")
+
 
     def increase_liquidity(
         self, token_id, token0, token1, token0_amount_topup, token1_amount_topup
@@ -273,6 +278,7 @@ class UniV3:
                     }
                     json.dump(tx_data, fp, indent=4, sort_keys=True)
 
+
     def mint_position(self, pool_addr, range0, range1, token0_amount, token1_amount):
         """
         Create a NFT on the desired range, adding the liquidity specified
@@ -365,6 +371,7 @@ class UniV3:
             }
             json.dump(tx_data, fp, indent=4, sort_keys=True)
 
+
     def positions_info(self):
         nfts_owned = self.nonfungible_position_manager.balanceOf(self.safe) - 1
 
@@ -395,6 +402,7 @@ class UniV3:
                 print(fees[1] / 10 ** token1.decimals(), token1.symbol())
         else:
             print(f" === Safe ({self.safe.address}) does not own any NFT === ")
+
 
     def transfer_nft(self, token_id, new_owner):
         """
