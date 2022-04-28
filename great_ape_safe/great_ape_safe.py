@@ -22,7 +22,6 @@ from great_ape_safe.ape_api.convex import Convex
 from great_ape_safe.ape_api.cow import Cow
 from great_ape_safe.ape_api.curve import Curve
 from great_ape_safe.ape_api.curve_v2 import CurveV2
-from great_ape_safe.ape_api.opolis import Opolis
 from great_ape_safe.ape_api.pancakeswap_v2 import PancakeswapV2
 from great_ape_safe.ape_api.rari import Rari
 from great_ape_safe.ape_api.solidly import Solidly
@@ -73,9 +72,11 @@ class GreatApeSafe(ApeSafe):
     def init_badger(self):
         self.badger = Badger(self)
 
+
     def init_citadel(self):
         self.citadel = Citadel(self)
-        
+
+
     def init_compound(self):
         self.compound = Compound(self)
 
@@ -94,10 +95,6 @@ class GreatApeSafe(ApeSafe):
 
     def init_curve_v2(self):
         self.curve_v2 = CurveV2(self)
-
-
-    def init_opolis(self):
-        self.opolis = Opolis(self)
 
 
     def init_pancakeswap_v2(self):
