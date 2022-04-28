@@ -14,6 +14,7 @@ ADDRESSES_ETH = {
         "cvx": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
         "cvxcrv": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
         "crv": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+        "b_crv_ibbtc": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
     },
     "aave": {
         "incentives_controller": "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5",
@@ -37,7 +38,7 @@ ADDRESSES_ETH = {
         "vlcvx_extra_rewards": "0xDecc7d761496d30F30b92Bdf764fb8803c79360D",
         "booster": "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
         "claim_zap": "0x92Cf9E5e4D1Dfbf7dA0d2BB3e884a68416a65070",
-        "vlCVX": "0xD18140b4B819b895A3dba5442F959fA44994AF50",
+        "vlcvx": "0xD18140b4B819b895A3dba5442F959fA44994AF50",
     },
     "cow": {
         "vault_relayer": "0xC92E8bdf79f0507f65a392b0ab4667716BFE0110",
