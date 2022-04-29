@@ -1,5 +1,10 @@
+from rich.console import Console
+
 from great_ape_safe import GreatApeSafe
 from helpers.addresses import registry
+
+
+console = Console()
 
 
 def set_discounts_limits(limits):
@@ -7,7 +12,9 @@ def set_discounts_limits(limits):
     safe.init_citadel()
     changed = 0
     for asset, limit in limits.items():
-        if safe.citadel.get_discount_limits(asset) != limit:
+        current = safe.citadel.get_discount_limits(asset)
+        if current != limit:
+            console.print(f"Setting {asset}'s current discount limit of {(current.min, current.max)} to {limit}...")
             safe.citadel.set_discount_limits(
                 asset, limit[0], limit[1]
             )

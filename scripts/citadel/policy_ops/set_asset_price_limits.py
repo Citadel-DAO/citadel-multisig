@@ -1,5 +1,10 @@
+from rich.console import Console
+
 from great_ape_safe import GreatApeSafe
 from helpers.addresses import registry
+
+
+console = Console()
 
 
 def set_asset_price_limits(limits):
@@ -7,7 +12,9 @@ def set_asset_price_limits(limits):
     safe.init_citadel()
     changed = 0
     for asset, (min_price, max_price) in limits.items():
-        if safe.citadel.get_asset_price_limits(asset) != (min_price, max_price):
+        current = safe.citadel.get_asset_price_limits(asset)
+        if current != (min_price, max_price):
+            console.print(f"Setting {asset}'s current asset price limit of {(current.min, current.max)} to {(min_price, max_price)}...")
             safe.citadel.set_asset_price_limits(
                 asset, min_price, max_price
             )
