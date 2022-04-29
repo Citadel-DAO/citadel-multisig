@@ -7,8 +7,10 @@ from brownie.exceptions import VirtualMachineError
 class Curve:
     def __init__(self, safe):
         self.safe = safe
+
         # tokens
-        self.crv = interface.ERC20(registry.eth.treasury_tokens.CRV)
+        self.crv = interface.ERC20(registry.eth.tokens.crv)
+
         # contracts
         self.provider = safe.contract(registry.eth.curve.provider)
         self.registry = safe.contract(self.provider.get_registry())
@@ -16,6 +18,7 @@ class Curve:
         self.exchanger = safe.contract(self.provider.get_address(2))
         self.factory_registry = safe.contract(self.provider.get_address(3))
         self.crypto_registry = safe.contract(self.provider.get_address(5))
+
         # parameters
         self.max_slippage_and_fees = 0.02
         self.is_v2 = False

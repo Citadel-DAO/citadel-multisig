@@ -5,7 +5,7 @@ import sys
 from decimal import Decimal
 from pprint import pprint
 
-from brownie import Contract, chain, interface, web3
+from brownie import chain, interface, web3
 
 from helpers.addresses import registry
 

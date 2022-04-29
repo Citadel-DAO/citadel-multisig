@@ -9,20 +9,18 @@ class Convex():
 
         # tokens
         self.cvx = interface.ERC20(
-            registry.eth.treasury_tokens.CVX,
-            owner=self.safe.account
+            registry.eth.tokens.cvx, owner=self.safe.account
         )
         self.cvxcrv = interface.ERC20(
-            registry.eth.treasury_tokens.cvxCRV,
-            owner=self.safe.account
+            registry.eth.tokens.cvxcrv, owner=self.safe.account
         )
 
         # contracts
         self.booster = safe.contract(registry.eth.convex.booster)
         self.zap = safe.contract(registry.eth.convex.claim_zap)
         self.cvx_extra_rewards = interface.ICvxExtraRewards(
-            registry.eth.convex.vlCvxExtraRewardDistribution,
-            owner=self.safe.account)
+            registry.eth.convex.vlcvx_extra_rewards, owner=self.safe.account
+        )
 
 
     def get_pool_info(self, underlying):

@@ -10,14 +10,16 @@ C = Console()
 
 class Aave():
     def __init__(self, safe):
-        self.safe       = safe
+        self.safe = safe
+
         # tokens
-        self.aave       = safe.contract(registry.eth.treasury_tokens.AAVE)
-        self.stkaave    = safe.contract(registry.eth.treasury_tokens.stkAAVE)
+        self.aave = safe.contract(registry.eth.tokens.aave)
+        self.stkaave = safe.contract(registry.eth.tokens.stkaave)
+
         # contracts
         self.controller = safe.contract(registry.eth.aave.incentives_controller)
-        self.data       = safe.contract(registry.eth.aave.data_provider)
-        self.pool       = safe.contract(registry.eth.aave.aave_lending_pool_v2)
+        self.data = safe.contract(registry.eth.aave.data_provider)
+        self.pool = safe.contract(registry.eth.aave.aave_lending_pool_v2)
 
 
     def deposit(self, underlying, mantissa, destination=None):
