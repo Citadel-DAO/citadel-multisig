@@ -1,5 +1,7 @@
 from collections import namedtuple
+
 from brownie import interface
+
 from helpers.addresses import registry
 
 
@@ -8,42 +10,57 @@ Limits = namedtuple("limits", "min max")
 
 class Citadel():
     """
-    collection of all contracts and methods needed to interact with the Citadel
+    Collection of all contracts and methods needed to interact with the Citadel
     system.
     """
 
+
     def __init__(self, safe):
         self.safe = safe
-        self.funding_contracts = {}
-        self.funding_contracts[registry.eth.tokens.cvx] = interface.IFunding(
-                registry.eth.funding.cvx,
-                owner=self.safe.account
-            )
-        self.funding_contracts[registry.eth.tokens.wbtc] = interface.IFunding(
-                registry.eth.funding.cvx,
-                owner=self.safe.account
-            )
 
-    def set_discount(self, discount, token):
-        self.funding_contracts[token].setDiscount(discount)
+        # contracts
+        self.gac = interface.IGlobalAccessControl(
+            registry.eth.citadel.gac, owner=self.safe.account
+        )
 
-    def get_discount(self, token):
-        return self.funding_contracts[token].discount;
 
-    def set_discount_limits(self, min_discount, max_discount, token):
-        self.funding_contracts[token].setDiscountLimits(min_discount, max_discount)
+    def get_funding_contract(self, asset):
+        return interface.IFunding(
+            registry.eth.citadel.funding[asset],
+            owner=self.safe.account
+        )
 
-    def get_discount_limits(self, token):
-        contract = self.funding_contracts[token] 
-        return Limits(contract.minDiscount(), contract.maxDiscount())
 
-    def set_discounts(self, discounts):
-        for token, discount in discounts.items():
-            self.set_discount(discount, token)
+    def get_discount(self, asset):
+        return self.get_funding_contract(asset).getDiscount();
 
-    def set_asset_price_bounds(self, min_price, max_price, token):
-        self.funding_contracts[token].setCitadelAssetPriceBounds(min_price, max_price)
 
-    def get_asset_limits(self, token):
-        contract = self.funding_contracts[token] 
-        return Limits(contract.minCitadelPriceInAsset, contract.maxCitadelPriceInAsset)
+    def set_discount(self, asset, discount):
+        contract = self.get_funding_contract(asset)
+        contract.setDiscount(discount)
+        assert discount == self.get_discount(asset)
+
+
+    def get_discount_limits(self, asset):
+        contract = self.get_funding_contract(asset)
+        return Limits(
+            contract.getFundingParams()[1],
+            contract.getFundingParams()[2]
+        )
+
+
+    def set_discount_limits(self, asset, min_discount, max_discount):
+        self.get_funding_contract(asset).setDiscountLimits(
+            min_discount, max_discount
+        )
+        assert self.get_discount_limits(asset) == (min_discount, max_discount)
+
+
+    def get_asset_price_limits(self, asset):
+        contract = self.get_funding_contract(asset)
+        return Limits(contract.minCitadelPriceInAsset(), contract.maxCitadelPriceInAsset())
+
+
+    def set_asset_price_limits(self, asset, min_price, max_price):
+        self.get_funding_contract(asset).setCitadelAssetPriceBounds(min_price, max_price)
+        assert self.get_asset_price_limits(asset) == (min_price, max_price)
