@@ -30,6 +30,7 @@ ADDRESSES_ETH = {
         "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
         "policy_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",
         "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
+        "minter": "0x594691aEa75080dd9B3e91e648Db6045d4fF6E22",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
