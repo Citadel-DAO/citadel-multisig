@@ -16,7 +16,7 @@ from helpers.chaindata import labels
 from great_ape_safe.ape_api.aave import Aave
 from great_ape_safe.ape_api.anyswap import Anyswap
 from great_ape_safe.ape_api.badger import Badger
-from great_ape_safe.ape.api.citadel import Citadel
+from great_ape_safe.ape_api.citadel import Citadel
 from great_ape_safe.ape_api.compound import Compound
 from great_ape_safe.ape_api.convex import Convex
 from great_ape_safe.ape_api.cow import Cow
