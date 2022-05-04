@@ -73,6 +73,7 @@ ADDRESSES_ETH = {
         "factory_v3": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
         "v3pool_wbtc_badger": "0xe15e6583425700993bd08F51bF6e7B73cd5da91B",
     },
+    "sablier": "0xCD18eAa163733Da39c232722cBC4E8940b1D8888",
 }
 ADDRESSES_BSC = {
     "pancakeswap": {
