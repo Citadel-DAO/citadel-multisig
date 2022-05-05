@@ -24,6 +24,7 @@ from great_ape_safe.ape_api.curve import Curve
 from great_ape_safe.ape_api.curve_v2 import CurveV2
 from great_ape_safe.ape_api.pancakeswap_v2 import PancakeswapV2
 from great_ape_safe.ape_api.rari import Rari
+from great_ape_safe.ape_api.sablier import Sablier
 from great_ape_safe.ape_api.solidly import Solidly
 from great_ape_safe.ape_api.spookyswap import SpookySwap
 from great_ape_safe.ape_api.sushi import Sushi
@@ -103,7 +104,10 @@ class GreatApeSafe(ApeSafe):
 
     def init_rari(self):
         self.rari = Rari(self)
+    
 
+    def init_sablier(self):
+        self.sablier = Sablier(self)
 
     def init_solidly(self):
         self.solidly = Solidly(self)

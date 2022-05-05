@@ -13,23 +13,47 @@ def main(csv_file="stream_recipients_example"):
 
     df = pd.read_csv(f"{os.path.dirname(__file__)}/{csv_file}.csv")
 
-    total_approval_amts = df.groupby("token_address")["stream_amount"].sum()
+    df["stream_amount"] = df.apply(
+        lambda row: row["stream_amount"]
+        * 10 ** safe.contract(row["token_address"]).decimals(),
+        axis=1,
+    )
+    df["stream_amount"].mask(
+        df["stream_amount"]
+        % (
+            df["ending_time"].apply(lambda x: _date_to_ts(x))
+            - df["start_time"].apply(lambda x: _date_to_ts(x))
+        )
+        != 0,
+        _acceptable_amount(
+            df["stream_amount"],
+            df["ending_time"].apply(lambda x: _date_to_ts(x))
+            - df["start_time"].apply(lambda x: _date_to_ts(x)),
+        ),
+        inplace=True,
+    )
 
+    total_approval_amts = df.groupby("token_address")["stream_amount"].sum()
     for addr, amt in total_approval_amts.items():
         erc20 = safe.contract(addr)
-        erc20.approve(safe.sablier.sablier_v1_1, amt * 10 ** erc20.decimals())
+        erc20.approve(safe.sablier.sablier_v1_1, amt)
 
     for _, row in df.iterrows():
-        starting_time_ts = datetime.strptime(row["start_time"], "%Y-%m-%d")
-        ending_time_ts = datetime.strptime(row["ending_time"], "%Y-%m-%d")
-
-        erc20 = safe.contract(row["token_address"])
         safe.sablier.create_stream(
             row["recipient"],
-            row["stream_amount"] * 10 ** erc20.decimals(),
+            row["stream_amount"],
             row["token_address"],
-            int(starting_time_ts.replace(tzinfo=timezone.utc).timestamp()),
-            int(ending_time_ts.replace(tzinfo=timezone.utc).timestamp()),
+            _date_to_ts(row["starting_time"]),
+            _date_to_ts(row["ending_time"]),
         )
 
     safe.post_safe_tx()
+
+
+def _date_to_ts(str_date):
+    dt = datetime.strptime(str_date, "%Y-%m-%d")
+    return int(dt.replace(tzinfo=timezone.utc).timestamp())
+
+
+def _acceptable_amount(amount, interval):
+    return amount - (amount % interval)
