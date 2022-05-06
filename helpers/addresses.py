@@ -93,6 +93,9 @@ ADDRESSES_FANTOM = {
         "factory": "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"
     },
 }
+ADDRESSES_RINKEBY = {
+    "sablier": "0xC1f3af5DC05b0C51955804b2afc80eF8FeED67b9"
+}
 
 
 def checksum_address_dict(addresses):
@@ -117,6 +120,7 @@ registry = DotMap({
     "eth": checksum_address_dict(ADDRESSES_ETH),
     "bsc": checksum_address_dict(ADDRESSES_BSC),
     "ftm": checksum_address_dict(ADDRESSES_FANTOM),
+    "rinkeby": checksum_address_dict(ADDRESSES_RINKEBY)
 })
 
 # flatten nested dicts and invert the resulting key <-> value

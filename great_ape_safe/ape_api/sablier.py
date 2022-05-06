@@ -1,4 +1,4 @@
-from brownie import interface
+from brownie import interface, chain
 
 from helpers.addresses import registry
 
@@ -17,7 +17,8 @@ class Sablier:
         self.safe = safe
 
         self.sablier_v1_1 = interface.ISablier(
-            registry.eth.sablier, owner=self.safe.account
+            registry.eth.sablier if chain.id == 1 else registry.rinkeby.sablier,
+            owner=self.safe.account,
         )
 
     def get_stream(self, stream_id):
