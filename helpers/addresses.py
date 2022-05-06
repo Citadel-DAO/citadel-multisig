@@ -120,7 +120,7 @@ registry = DotMap({
     "eth": checksum_address_dict(ADDRESSES_ETH),
     "bsc": checksum_address_dict(ADDRESSES_BSC),
     "ftm": checksum_address_dict(ADDRESSES_FANTOM),
-    "rinkeby": checksum_address_dict(ADDRESSES_RINKEBY)
+    "rin": checksum_address_dict(ADDRESSES_RINKEBY)
 })
 
 # flatten nested dicts and invert the resulting key <-> value
