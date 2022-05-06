@@ -27,8 +27,9 @@ ADDRESSES_ETH = {
     "citadel": {
         "deployer": "0xa967ba66fb284ec18bbe59f65bcf42dd11ba8128",
         "governance": "0xa95ecbDc51082ED2a2D078a5dE5275777dD73347",
-        "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
         "policy_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",
+        "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
+        "treasury_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416", # TODO
         "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
