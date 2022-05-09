@@ -27,8 +27,9 @@ ADDRESSES_ETH = {
     "citadel": {
         "deployer": "0xa967ba66fb284ec18bbe59f65bcf42dd11ba8128",
         "governance": "0xa95ecbDc51082ED2a2D078a5dE5275777dD73347",
-        "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
         "policy_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",
+        "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
+        "treasury_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416", # TODO
         "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
         "minter": "0x594691aEa75080dd9B3e91e648Db6045d4fF6E22",
         "funding": {
@@ -74,6 +75,7 @@ ADDRESSES_ETH = {
         "factory_v3": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
         "v3pool_wbtc_badger": "0xe15e6583425700993bd08F51bF6e7B73cd5da91B",
     },
+    "sablier": "0xCD18eAa163733Da39c232722cBC4E8940b1D8888",
 }
 ADDRESSES_BSC = {
     "pancakeswap": {
@@ -91,6 +93,9 @@ ADDRESSES_FANTOM = {
         "router": "0xF491e7B69E4244ad4002BC14e878a34207E38c29",
         "factory": "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"
     },
+}
+ADDRESSES_RINKEBY = {
+    "sablier": "0xC1f3af5DC05b0C51955804b2afc80eF8FeED67b9"
 }
 
 
@@ -116,6 +121,7 @@ registry = DotMap({
     "eth": checksum_address_dict(ADDRESSES_ETH),
     "bsc": checksum_address_dict(ADDRESSES_BSC),
     "ftm": checksum_address_dict(ADDRESSES_FANTOM),
+    "rin": checksum_address_dict(ADDRESSES_RINKEBY)
 })
 
 # flatten nested dicts and invert the resulting key <-> value
