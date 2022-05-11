@@ -48,6 +48,14 @@ class Citadel:
         self.get_funding_contract(asset).setDiscountLimits(min_discount, max_discount)
         assert self.get_discount_limits(asset) == (min_discount, max_discount)
 
+    def get_citadel_price_flag(self, asset):
+        funding_pool = self.get_funding_contract(asset)
+        return funding_pool.citadelPriceFlag()
+
+    def get_citadel_price_per_asset(self, asset):
+        funding_pool = self.get_funding_contract(asset)
+        return funding_pool.citadelPriceInAsset()
+
     def get_asset_price_limits(self, asset):
         contract = self.get_funding_contract(asset)
         return Limits(
@@ -63,6 +71,13 @@ class Citadel:
     def mint_and_distribute(self):
         self.citadel_minter.mintAndDistribute()
 
+    def get_citadel_distribution_split(self):
+        return {
+            "funding": "{:.2%}".format(self.citadel_minter.fundingBps() / self.MAX_BPS),
+            "staking": "{:.2%}".format(self.citadel_minter.stakingBps() / self.MAX_BPS),
+            "locking": "{:.2%}".format(self.citadel_minter.lockingBps() / self.MAX_BPS),
+        }
+
     def set_citadel_distribution_split(self, funding_bps, staking_bps, locking_bps):
         # enforce here so there is not revert at SC level
         assert funding_bps + staking_bps + locking_bps == self.MAX_BPS
@@ -73,8 +88,23 @@ class Citadel:
         assert self.citadel_minter.stakingBps() == staking_bps
         assert self.citadel_minter.lockingBps() == locking_bps
 
+    def get_funding_pool_weight(self, asset):
+        funding_pool = self.get_funding_contract(asset)
+        return self.citadel_minter.fundingPoolWeights(funding_pool)
+
+    def get_total_funding_pool_weight(self):
+        return self.citadel_minter.totalFundingPoolWeight()
+
     def set_funding_pool_weight(self, asset, weight):
         # enforce here so there is not revert at SC level
         assert weight <= self.MAX_BPS
         funding_pool = self.get_funding_contract(asset)
         self.citadel_minter.setFundingPoolWeight(funding_pool.address, weight)
+
+    def get_pricing_oracle(self, asset):
+        funding_pool = self.get_funding_contract(asset)
+        return funding_pool.citadelPriceInAssetOracle()
+
+    def get_asset_cap(self, asset):
+        funding_pool = self.get_funding_contract(asset)
+        return funding_pool.getFundingParams()[5]
