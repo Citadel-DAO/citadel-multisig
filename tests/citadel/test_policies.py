@@ -1,8 +1,8 @@
 import brownie
 
 from scripts.citadel.policy_ops.set_discounts import set_discounts
-from scripts.citadel.policy_ops.set_discounts_limits import  set_discounts_limits
-from scripts.citadel.policy_ops.set_asset_price_limits import  set_asset_price_limits
+from scripts.citadel.policy_ops.set_discounts_limits import set_discounts_limits
+from scripts.citadel.policy_ops.set_asset_price_limits import set_asset_price_limits
 
 
 def test_set_single_discount_limit():

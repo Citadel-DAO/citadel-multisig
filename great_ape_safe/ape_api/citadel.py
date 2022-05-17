@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from brownie import interface
+from brownie import interface, web3
 
 from helpers.addresses import registry
 
@@ -19,12 +19,16 @@ class Citadel:
 
         # constants
         self.MAX_BPS = 10000
+        
         # contracts
         self.gac = interface.IGlobalAccessControl(
             registry.eth.citadel.gac, owner=self.safe.account
         )
         self.citadel_minter = interface.ICitadelMinter(
             registry.eth.citadel.minter, owner=self.safe.account
+        )
+        self.staked_citadel_locker = interface.IStakedCitadelLocker(
+            registry.eth.citadel.staked_citadel_locker, owner=self.safe.account
         )
 
     def get_funding_contract(self, asset):
@@ -78,3 +82,13 @@ class Citadel:
         assert weight <= self.MAX_BPS
         funding_pool = self.get_funding_contract(asset)
         self.citadel_minter.setFundingPoolWeight(funding_pool.address, weight)
+
+    def distribute_yield(self, asset, mantissa):
+        assert mantissa > 0
+        asset = interface.ERC20(asset, owner=self.safe.account)
+        asset.approve(self.staked_citadel_locker, mantissa)
+        self.staked_citadel_locker.notifyRewardAmount(
+            asset,
+            mantissa,
+            web3.solidityKeccak(['bytes32'], [b'treasury-yield']).hex()
+        )
