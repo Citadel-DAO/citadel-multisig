@@ -17,21 +17,26 @@ def confirm_access(gov):
         gov.citadel.gac.unpause()
 
     if not gov.citadel.gac.hasRole(
-        gov.citadel.gac.CONTRACT_GOVERNANCE_ROLE(),
-        registry.eth.citadel.governance
+        gov.citadel.gac.CONTRACT_GOVERNANCE_ROLE(), registry.eth.citadel.governance
     ):
         gov.citadel.gac.grantRole(
             gov.citadel.gac.CONTRACT_GOVERNANCE_ROLE(),
             registry.eth.citadel.governance,
-            {'from': registry.eth.citadel.deployer}
+            {"from": registry.eth.citadel.deployer},
         )
 
     if not gov.citadel.gac.hasRole(
-        gov.citadel.gac.POLICY_OPERATIONS_ROLE(),
-        registry.eth.citadel.policy_ops
+        gov.citadel.gac.POLICY_OPERATIONS_ROLE(), registry.eth.citadel.policy_ops
     ):
         gov.citadel.gac.grantRole(
             gov.citadel.gac.POLICY_OPERATIONS_ROLE(),
             registry.eth.citadel.policy_ops,
-            {'from': registry.eth.citadel.deployer}
+            {"from": registry.eth.citadel.deployer},
+        )
+
+    if not gov.citadel.gac.hasRole(gov.citadel.gac.CITADEL_MINTER_ROLE(), gov):
+        gov.citadel.gac.grantRole(
+            gov.citadel.gac.CITADEL_MINTER_ROLE(),
+            registry.eth.citadel.governance,
+            {"from": registry.eth.citadel.deployer},
         )
