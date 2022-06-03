@@ -92,8 +92,10 @@ def main():
     wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / 1e18) / 1e10
     governance.curve.deposit(lp_ctdl_wbtc, [to_liquidity, wbtc_liquidity])
 
-    balance_checker.verifyBalance(ctdl, 0, to_liquidity)
-    balance_checker.verifyBalance(r.tokens.wbtc, 0, wbtc_liquidity)
+    balance_checker.verifyBalance(ctdl, r.crv_pools.crvCtdlWbtc, to_liquidity)
+    balance_checker.verifyBalance(
+        r.tokens.wbtc, r.crv_pools.crvCtdlWbtc, wbtc_liquidity
+    )
 
     # assets transfers to vault from KRs
     for i in range(kr_array_len):
@@ -130,7 +132,7 @@ def main():
             funding_contract.unpause()
 
     # set minting schedules
-    for epoch, rate in RATES:
+    for epoch, rate in enumerate(RATES):
         governance.citadel.set_epoch_rate(epoch, rate)
 
     governance.citadel.supply_schedule.setMintingStart(chain.time())
