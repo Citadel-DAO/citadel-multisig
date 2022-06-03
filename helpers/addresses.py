@@ -84,6 +84,7 @@ ADDRESSES_ETH = {
         "zap_pbtc": "0x11F419AdAbbFF8d595E7d5b223eee3863Bb3902C",
         "zap_obtc": "0xd5BCf53e2C81e1991570f33Fa881c49EEa570C8D",
     },
+    "crv_pools": {"crvCtdlWbtc": "0x3c42B0f384D2912661C940d46cfFE1CD10F1c66F"},
     "rari": {
         "unitroller": "0xe3952d770FB26CC61877CD34Fbc3A3750881e9A1",
     },
