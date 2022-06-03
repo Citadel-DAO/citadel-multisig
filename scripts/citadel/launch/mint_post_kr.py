@@ -68,8 +68,13 @@ def main():
     ctdl.approve(xCTDL, total_citadel_bought)
 
     for i in range(kr_array_len):
+        ppfs = xCTDL.getPricePerFullShare() / 1e18
         xCTDL.depositFor(kr_array[i], citadatel_bougth_per_round[i])
-        balance_checker.verifyBalance(xCTDL, kr_array[i], citadatel_bougth_per_round[i])
+        balance_checker.verifyBalance(
+            xCTDL,
+            kr_array[i],
+            citadatel_bougth_per_round[i] / ppfs,
+        )
 
     remaining_supply = initial_supply - total_citadel_bought - 1e18
     to_liquidity = remaining_supply * LIQUIDITY_PCT
