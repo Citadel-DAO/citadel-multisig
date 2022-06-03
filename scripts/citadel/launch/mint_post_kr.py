@@ -21,7 +21,7 @@ RATES = [
 # prices asset limits is going to be 1/3x and 3x
 FACTOR_PRICES = 3
 
-
+# NOTE: test simulation with block @14685000, so test KR deployment are not ended
 def main():
     governance = GreatApeSafe(r.citadel.governance)
     treasury = GreatApeSafe(r.citadel.treasury_vault)
@@ -29,7 +29,7 @@ def main():
     governance.init_curve_v2()
 
     # tokens involved
-    ctdl = governance.contract(r.tokens.citadel)
+    ctdl = interface.ICitadel(r.tokens.citadel, owner=governance.account)
     xCTDL = governance.contract(r.tokens.xCTDL)
     lp_ctdl_wbtc = governance.contract(r.tokens.crvCtdlWbtc)
 
