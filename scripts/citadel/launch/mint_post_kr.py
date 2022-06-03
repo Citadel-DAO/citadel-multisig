@@ -77,25 +77,25 @@ def main():
             citadatel_bougth_per_round[i] / ppfs,
         )
 
-    remaining_supply = initial_supply - total_citadel_bought - 1e18
-    to_liquidity = remaining_supply * LIQUIDITY_PCT
-    to_treasury = remaining_supply * TREASURY_PCT
+    remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
+    to_liquidity = remaining_supply * Decimal(LIQUIDITY_PCT)
+    to_treasury = remaining_supply * Decimal(TREASURY_PCT)
 
     # seed xCitadel with 1 ctdl
     ctdl.approve(xCTDL, 1e18)
     xCTDL.deposit(1e18)
 
     # send ctdl to vault
-    ctdl.transfer(to_treasury, treasury)
+    ctdl.transfer(treasury, to_treasury)
     balance_checker.verifyBalance(ctdl, treasury, to_treasury)
 
     # add liquidity into curve factory pool prior
-    wbtc_amount_per_ctdl = (
+    wbtc_amount_per_ctdl = Decimal(
         CITADEL_LAUNCH_DOLLAR_PRICE
         / (wbtc_usdc_oracle.latestAnswer() / 10 ** wbtc_usdc_oracle.decimals())
         * 1e18
     )
-    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / 1e18) / 1e10
+    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / Decimal(1e18)) / Decimal(1e10)
     governance.curve.deposit(lp_ctdl_wbtc, [to_liquidity, wbtc_liquidity])
 
     balance_checker.verifyBalance(ctdl, r.crv_pools.crvCtdlWbtc, to_liquidity)
