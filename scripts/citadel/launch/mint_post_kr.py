@@ -21,8 +21,8 @@ RATES = [
 # prices asset limits is going to be 1/3x and 3x
 FACTOR_PRICES = 3
 
-# NOTE: test simulation with block @14685000, so test KR deployment are not ended
-def main():
+
+def mint_launch(sim="False"):
     governance = GreatApeSafe(r.citadel.governance)
     treasury = GreatApeSafe(r.citadel.treasury_vault)
     governance.init_citadel()
@@ -77,13 +77,17 @@ def main():
             citadatel_bougth_per_round[i] / ppfs,
         )
 
-    remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
+    if sim == "True":
+        remaining_supply = initial_supply - Decimal(total_citadel_bought)
+    else:
+        remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
     to_liquidity = remaining_supply * Decimal(LIQUIDITY_PCT)
     to_treasury = remaining_supply * Decimal(TREASURY_PCT)
 
     # seed xCitadel with 1 ctdl
-    ctdl.approve(xCTDL, 1e18)
-    xCTDL.deposit(1e18)
+    if sim == "False":
+        ctdl.approve(xCTDL, 1e18)
+        xCTDL.deposit(1e18)
 
     # send ctdl to vault
     ctdl.transfer(treasury, to_treasury)
@@ -95,7 +99,9 @@ def main():
         / (wbtc_usdc_oracle.latestAnswer() / 10 ** wbtc_usdc_oracle.decimals())
         * 1e18
     )
-    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / Decimal(1e18)) / Decimal(1e10)
+    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / Decimal(1e18)) / Decimal(
+        1e10
+    )
     governance.curve_v2.deposit(lp_ctdl_wbtc, [to_liquidity, wbtc_liquidity])
 
     balance_checker.verifyBalance(ctdl, r.crv_pools.crvCtdlWbtc, to_liquidity)
