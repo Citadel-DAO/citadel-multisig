@@ -11,14 +11,16 @@ ADDRESSES_ETH = {
         "aave": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
         "stkaave": "0x4da27a545c0c5B758a6BA100e3a049001de870f5",
         "badger": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-        "citadel": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
-        "xCTDL": "0xa0FFfb6b575045f215432b3158Ffd0A9ee0454B9",
+        "citadel": "0x353a38c269A24aafb78Cd214c6E0668847Bb58FD",
+        "xCTDL": "0x62624eB2BA4f60A7188214B88542F5772703D551",
         "wbtc": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
         "comp": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
         "cvx": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
         "cvxcrv": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
         "crv": "0xD533a949740bb3306d119CC777fa900bA034cd52",
         "b_crv_ibbtc": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+        "crvCtdlWbtc": "0xE2b11613bBe8E09F73fA81B4A09F0dadB20F5Df6",
     },
     "aave": {
         "incentives_controller": "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5",
@@ -35,24 +37,25 @@ ADDRESSES_ETH = {
         "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
         "treasury_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",  # TODO
         "discount_manager": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",  # TODO
-        "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
-        "minter": "0x594691aEa75080dd9B3e91e648Db6045d4fF6E22",
-        "staked_citadel_locker": "0xC0BB8cB46778777308C51b863e6200A48BCDaEC5",
-        "supply_schedule": "0x90D047E94515af741206033399b3C60114Ed99f2",
+        "gac": "0xC936098217b987b9D7c24fAC7252f27CdC16c377",
+        "minter": "0xB61979B68f6978FD3ab25ae1c8d54456EC37A39f",
+        "staked_citadel_locker": "0x9f2819D2D9DE18e96c5d19cBe906d9E490E2dA5b",
+        "supply_schedule": "0xDC17DBDb91E874e40158984606BD308213c99803",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
             "badger": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",  # TODO
         },
         "knighting_round": {
-            "cvx": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "renBTC": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "ibBTC": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "frax": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "usdc": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "badger": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "bveCVX": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
-            "weth": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "wbtc": "0x722D0951E299656AFbA70aC50cc3C42855d44EbB",
+            "cvx": "0x7bB5288abd71C9771aF8F94414dC711D31ed7B70",
+            "renBTC": "0xa7eFeb1313e6cE6bfFDAe83c3705A62534725aec",
+            "ibBTC": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+            "frax": "0x11b57bE19Dbb4e8918EC77AF7e27849325320d75",
+            "usdc": "0x85E4b536568786894dD5Ef5D75220789230095ea",
+            "badger": "0x2B1315c14811dEd74A669c1985b6dc43E76561f9",
+            "bveCVX": "0xA613175C21cF66EFca7Ab17F6F1E2A1119c02d59",
+            "weth": "0xf12a18e985EAD24EB054324d20F81b0EAbA09e57",
         },
     },
     "chainlink": {
