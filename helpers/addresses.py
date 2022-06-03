@@ -1,5 +1,6 @@
 import json
 
+from brownie import chain
 import pandas as pd
 from dotmap import DotMap
 from web3 import Web3
@@ -11,7 +12,7 @@ ADDRESSES_ETH = {
         "stkaave": "0x4da27a545c0c5B758a6BA100e3a049001de870f5",
         "badger": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
         "citadel": "0xaF0b1FDf9c6BfeC7b3512F207553c0BA00D7f1A2",
-        "wbtc": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",        
+        "wbtc": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
         "comp": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
         "cvx": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
         "cvxcrv": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
@@ -31,14 +32,32 @@ ADDRESSES_ETH = {
         "governance": "0xa95ecbDc51082ED2a2D078a5dE5275777dD73347",
         "policy_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",
         "treasury_vault": "0x38724146C8dc1Aa49c3395091cf86B789c37F52c",
-        "treasury_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416", # TODO
+        "treasury_ops": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",  # TODO
+        "discount_manager": "0x7426e8987f8d388e731Dec452D8B0a1710d8E416",  # TODO
         "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
         "minter": "0x594691aEa75080dd9B3e91e648Db6045d4fF6E22",
-        "knighting_round": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",
+        "staked_citadel_locker": "0xC0BB8cB46778777308C51b863e6200A48BCDaEC5",
+        "supply_schedule": "0x90D047E94515af741206033399b3C60114Ed99f2",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
+            "badger": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",  # TODO
         },
+        "knighting_round": {
+            "cvx": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "renBTC": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "ibBTC": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "frax": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "usdc": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "badger": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "bveCVX": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+            "weth": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",  # TODO
+        },
+    },
+    "chainlink": {
+        "btc_usd_feed": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",
+        "cvx_usd_feed": "0xd962fC30A72A84cE50161031391756Bf2876Af5D",
+        "badger_usd_feed": "0x66a47b7206130e6FF64854EF0E1EDfa237E65339",
     },
     "compound": {
         "comptroller": "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
@@ -84,7 +103,7 @@ ADDRESSES_BSC = {
     "pancakeswap": {
         "router_v1": "0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F",
         "router_v2": "0x10ED43C718714eb63d5aA57B78B54704E256024E",
-        "factory_v2": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
+        "factory_v2": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
     },
 }
 ADDRESSES_FANTOM = {
@@ -94,12 +113,10 @@ ADDRESSES_FANTOM = {
     },
     "spookyswap": {
         "router": "0xF491e7B69E4244ad4002BC14e878a34207E38c29",
-        "factory": "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"
+        "factory": "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3",
     },
 }
-ADDRESSES_RINKEBY = {
-    "sablier": "0xC1f3af5DC05b0C51955804b2afc80eF8FeED67b9"
-}
+ADDRESSES_RINKEBY = {"sablier": "0xC1f3af5DC05b0C51955804b2afc80eF8FeED67b9"}
 
 
 def checksum_address_dict(addresses):
@@ -117,15 +134,33 @@ def checksum_address_dict(addresses):
     return checksummed
 
 
-with open('helpers/chaindata.json') as chaindata:
+with open("helpers/chaindata.json") as chaindata:
     chain_ids = json.load(chaindata)
 
-registry = DotMap({
-    "eth": checksum_address_dict(ADDRESSES_ETH),
-    "bsc": checksum_address_dict(ADDRESSES_BSC),
-    "ftm": checksum_address_dict(ADDRESSES_FANTOM),
-    "rin": checksum_address_dict(ADDRESSES_RINKEBY)
-})
+registry = DotMap(
+    {
+        "eth": checksum_address_dict(ADDRESSES_ETH),
+        "bsc": checksum_address_dict(ADDRESSES_BSC),
+        "ftm": checksum_address_dict(ADDRESSES_FANTOM),
+        "rin": checksum_address_dict(ADDRESSES_RINKEBY),
+    }
+)
+
+
+def get_registry():
+    if chain.id == 1:
+        return registry.eth
+    elif chain.id == 137:
+        return registry.poly
+    elif chain.id == 56:
+        return registry.bsc
+    elif chain.id == 42161:
+        return registry.arbitrum
+    elif chain.id == 250:
+        return registry.ftm
+
+
+r = get_registry()
 
 # flatten nested dicts and invert the resulting key <-> value
 # this allows for reversed lookup of an address
