@@ -22,7 +22,7 @@ RATES = [
 FACTOR_PRICES = 3
 
 
-def mint_launch(sim="False"):
+def mint_launch():
     governance = GreatApeSafe(r.citadel.governance)
     treasury = GreatApeSafe(r.citadel.treasury_vault)
     governance.init_citadel()
@@ -68,26 +68,23 @@ def mint_launch(sim="False"):
     ctdl.approve(xCTDL, total_citadel_bought)
 
     for i in range(kr_array_len):
-        ppfs = xCTDL.getPricePerFullShare() / 1e18
-        xCTDL.depositFor(kr_array[i], citadatel_bougth_per_round[i])
-        # we include ppfs here, cause on the test deployments alredy some `mintAndDistribute` occurred and ppfs is not 1:1
-        balance_checker.verifyBalance(
-            xCTDL,
-            kr_array[i],
-            citadatel_bougth_per_round[i] / ppfs,
-        )
+        if citadatel_bougth_per_round[i] > 0:
+            ppfs = xCTDL.getPricePerFullShare() / 1e18
+            xCTDL.depositFor(kr_array[i], citadatel_bougth_per_round[i])
+            # we include ppfs here, cause on the test deployments alredy some `mintAndDistribute` occurred and ppfs is not 1:1
+            balance_checker.verifyBalance(
+                xCTDL,
+                kr_array[i],
+                citadatel_bougth_per_round[i] / ppfs,
+            )
 
-    if sim == "True":
-        remaining_supply = initial_supply - Decimal(total_citadel_bought)
-    else:
-        remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
+    remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
     to_liquidity = remaining_supply * Decimal(LIQUIDITY_PCT)
     to_treasury = remaining_supply * Decimal(TREASURY_PCT)
 
     # seed xCitadel with 1 ctdl
-    if sim == "False":
-        ctdl.approve(xCTDL, 1e18)
-        xCTDL.deposit(1e18)
+    ctdl.approve(xCTDL, 1e18)
+    xCTDL.deposit(1e18)
 
     # send ctdl to vault
     ctdl.transfer(treasury, to_treasury)

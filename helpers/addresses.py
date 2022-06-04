@@ -46,14 +46,15 @@ ADDRESSES_ETH = {
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
             "badger": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",  # TODO
         },
+        "knighting_round_guest_list": "0x1Ca6d03F372Cc9F2AfB750D17092D71A0d953b57",
         "knighting_round": {
             "wbtc": "0x722D0951E299656AFbA70aC50cc3C42855d44EbB",
             "cvx": "0x7bB5288abd71C9771aF8F94414dC711D31ed7B70",
             "renBTC": "0xa7eFeb1313e6cE6bfFDAe83c3705A62534725aec",
-            "ibBTC": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+            "ibBTC": "0x680156ab9655f74dc80a0f5ac553564ab914bb12",
             "frax": "0x11b57bE19Dbb4e8918EC77AF7e27849325320d75",
             "usdc": "0x85E4b536568786894dD5Ef5D75220789230095ea",
-            "badger": "0x2B1315c14811dEd74A669c1985b6dc43E76561f9",
+            "badger": "0xA8bA9ccd4f1aDF8B8aACA177aC13f87f76c5552D",
             "bveCVX": "0xA613175C21cF66EFca7Ab17F6F1E2A1119c02d59",
             "weth": "0xf12a18e985EAD24EB054324d20F81b0EAbA09e57",
         },
