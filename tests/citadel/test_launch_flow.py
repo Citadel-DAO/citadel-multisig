@@ -1,4 +1,5 @@
 import pytest
+from brownie import chain
 
 from helpers.addresses import r
 
@@ -13,6 +14,11 @@ def config_distributor(gov, cvx, interface):
     kr = interface.IKnightingRound(r.citadel.knighting_round.cvx, owner=gov.account)
     cvx.approve(kr, 10e18, {"from": gov.address})
     kr.buy(10e18, 0, [])
+
+    # get chain on status that kr's contract had finalised
+    # reason: https://github.com/Citadel-DAO/citadel-contracts/blob/main/src/KnightingRound.sol#L279
+    duration = kr.saleDuration()
+    chain.mine(timedelta=duration)
 
 
 def test_launch():

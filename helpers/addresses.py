@@ -82,6 +82,7 @@ ADDRESSES_ETH = {
     "curve": {
         "provider": "0x0000000022D53366457F9d5E68Ec105046FC4383",
         "factory": "0x0959158b6040D32d04c301A72CBFD6b39E21c9AE",
+        "factory_not_peg_tokens": "0xF18056Bbd320E96A48e3Fbf8bC061322531aac99",
         "zap_sbtc": "0x7AbDBAf29929e7F8621B757D2a7c04d78d633834",
         "zap_3pool": "0xA79828DF1850E8a3A3064576f380D90aECDD3359",
         "zap_ibbtc": "0xbba4b444FD10302251d9F5797E763b0d912286A1",
@@ -104,6 +105,9 @@ ADDRESSES_ETH = {
         "v3pool_wbtc_badger": "0xe15e6583425700993bd08F51bF6e7B73cd5da91B",
     },
     "sablier": "0xCD18eAa163733Da39c232722cBC4E8940b1D8888",
+    "helpers": {
+        "balance_checker": "0xe92261c2D64C363109c36a754A87107142e61b72",
+    },
 }
 ADDRESSES_BSC = {
     "pancakeswap": {

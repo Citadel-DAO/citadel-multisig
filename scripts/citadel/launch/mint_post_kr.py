@@ -79,8 +79,14 @@ def mint_launch():
             )
 
     remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
-    to_liquidity = remaining_supply * Decimal(LIQUIDITY_PCT)
-    to_treasury = remaining_supply * Decimal(TREASURY_PCT)
+    to_liquidity = int(remaining_supply * Decimal(LIQUIDITY_PCT))
+    to_treasury = int(remaining_supply * Decimal(TREASURY_PCT))
+
+    assert (
+        initial_supply
+        - Decimal(total_citadel_bought + to_treasury + to_liquidity + 1e18)
+        < 3
+    )
 
     # seed xCitadel with 1 ctdl
     ctdl.approve(xCTDL, 1e18)
@@ -90,27 +96,44 @@ def mint_launch():
     ctdl.transfer(treasury, to_treasury)
     balance_checker.verifyBalance(ctdl, treasury, to_treasury)
 
-    # add liquidity into curve factory pool prior
-    wbtc_amount_per_ctdl = Decimal(
-        CITADEL_LAUNCH_DOLLAR_PRICE
-        / (wbtc_usdc_oracle.latestAnswer() / 10 ** wbtc_usdc_oracle.decimals())
-        * 1e18
+    # ctdl/wbtc pool creation
+    # values ref: https://github.com/Citadel-DAO/citadel-contracts/blob/main/src/test/AtomicLaunchTest.t.sol#L349
+    wbtc_price = wbtc_usdc_oracle.latestAnswer() / 10 ** wbtc_usdc_oracle.decimals()
+    pool_deployed = governance.curve_v2.pool_deployment(
+        "CTDL/wBTC",  # name
+        "CTDL",  # symbol
+        [ctdl.address, r.tokens.wbtc],  # coins
+        400000,  # A
+        145000000000000,  # gamma
+        26000000,  # mid_fee
+        45000000,  # out_fee
+        2000000000000,  # allowed_extra_profit
+        230000000000000,  # fee_gamma
+        146000000000000,  # adjustment_step
+        5000000000,  # admin_fee
+        600,  # ma_half_time
+        (wbtc_price / CITADEL_LAUNCH_DOLLAR_PRICE)
+        * 1e18,  # initial_price ~$WBTC/$CTDL = X. denomiated in 18 decimals
     )
-    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / Decimal(1e18)) / Decimal(
-        1e10
-    )
-    governance.curve_v2.deposit(lp_ctdl_wbtc, [to_liquidity, wbtc_liquidity])
+    pool_contract = governance.contract(pool_deployed)
+    pool_lp = interface.ICurveLP(pool_contract.token())
 
-    balance_checker.verifyBalance(ctdl, r.crv_pools.crvCtdlWbtc, to_liquidity)
-    balance_checker.verifyBalance(
-        r.tokens.wbtc, r.crv_pools.crvCtdlWbtc, wbtc_liquidity
+    # add liquidity into curve factory pool prior
+    wbtc_amount_per_ctdl = (CITADEL_LAUNCH_DOLLAR_PRICE / wbtc_price) * 1e18
+    wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / 1e18) / 1e10
+    governance.curve_v2.deposit(
+        pool_lp, [to_liquidity, wbtc_liquidity], fresh_pool=True
     )
+
+    balance_checker.verifyBalance(ctdl, pool_deployed, to_liquidity)
+    balance_checker.verifyBalance(r.tokens.wbtc, pool_deployed, wbtc_liquidity)
 
     # assets transfers to vault from KRs
     for i in range(kr_array_len):
-        token_in = governance.contract(tokens_in[i])
+        token_in = interface.IERC20(tokens_in[i], owner=governance.account)
         token_in_bal = token_in.balanceOf(governance)
-        token_in.transfer(treasury, token_in_bal)
+        if token_in_bal > 0:
+            token_in.transfer(treasury, token_in_bal)
 
     # ensure all was distributed
     assert ctdl.balanceOf(governance) < 3e18
