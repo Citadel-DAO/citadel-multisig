@@ -73,6 +73,6 @@ def confirm_access(gov, policy_ops):
     if not gov.citadel.gac.hasRole(gov.citadel.gac.CITADEL_MINTER_ROLE(), gov):
         gov.citadel.gac.grantRole(
             gov.citadel.gac.CITADEL_MINTER_ROLE(),
-            r.citadel.governance,
-            {"from": r.citadel.deployer},
+            registry.eth.citadel.governance,
+            {"from": registry.eth.citadel.deployer},
         )
