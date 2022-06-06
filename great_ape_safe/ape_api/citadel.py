@@ -76,26 +76,20 @@ class Citadel:
             "funding": "{:.2%}".format(self.citadel_minter.fundingBps() / self.MAX_BPS),
             "staking": "{:.2%}".format(self.citadel_minter.stakingBps() / self.MAX_BPS),
             "locking": "{:.2%}".format(self.citadel_minter.lockingBps() / self.MAX_BPS),
+            "dao": "{:.2%}".format(self.citadel_minter.daoBps() / self.MAX_BPS),
         }
 
     def set_citadel_distribution_split(
-        self, funding_bps, staking_bps, locking_bps, dao_bps=None
+        self, funding_bps, staking_bps, locking_bps, dao_bps
     ):
-        if not dao_bps:
-            # enforce here so there is not revert at SC level
-            assert funding_bps + staking_bps + locking_bps == self.MAX_BPS
-            self.citadel_minter.setCitadelDistributionSplit(
-                funding_bps, staking_bps, locking_bps
-            )
-        else:
-            # latest version contains a new bps variable `daoBps`
-            # https://github.com/Citadel-DAO/citadel-contracts/blob/main/src/CitadelMinter.sol#L338
-            assert funding_bps + staking_bps + locking_bps + dao_bps == self.MAX_BPS
-            self.citadel_minter.setCitadelDistributionSplit(
-                funding_bps, staking_bps, locking_bps, dao_bps
-            )
-            assert self.citadel_minter.daoBps() == dao_bps
+        # latest version contains a new bps variable `daoBps`
+        # https://github.com/Citadel-DAO/citadel-contracts/blob/main/src/CitadelMinter.sol#L338
+        assert funding_bps + staking_bps + locking_bps + dao_bps == self.MAX_BPS
+        self.citadel_minter.setCitadelDistributionSplit(
+            funding_bps, staking_bps, locking_bps, dao_bps
+        )
 
+        assert self.citadel_minter.daoBps() == dao_bps
         assert self.citadel_minter.fundingBps() == funding_bps
         assert self.citadel_minter.stakingBps() == staking_bps
         assert self.citadel_minter.lockingBps() == locking_bps
