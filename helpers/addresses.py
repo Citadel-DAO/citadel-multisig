@@ -168,6 +168,8 @@ def get_registry():
         return registry.arbitrum
     elif chain.id == 250:
         return registry.ftm
+    elif chain.id == 4:
+        return registry.rin
 
 
 r = get_registry()
