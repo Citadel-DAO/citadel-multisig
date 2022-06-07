@@ -1,11 +1,10 @@
 from great_ape_safe import GreatApeSafe
 from helpers.addresses import r
-from decimal import Decimal
-from brownie import chain, Contract, interface
+from brownie import interface
 
 # constants
 CITADEL_LAUNCH_DOLLAR_PRICE = 21
-SUPPLY_MULTIPLIER = Decimal(1666666666666666667 / 1e18)
+SUPPLY_MULTIPLIER = 1666666666666666667 / 1e18
 LIQUIDITY_PCT = 0.4
 TREASURY_PCT = 0.6
 MAX_DISCOUNT = 3000
@@ -77,13 +76,13 @@ def mint_launch():
                 citadatel_bougth_per_round[i],
             )
 
-    remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
-    to_liquidity = int(remaining_supply * Decimal(LIQUIDITY_PCT))
-    to_treasury = int(remaining_supply * Decimal(TREASURY_PCT))
+    remaining_supply = initial_supply - total_citadel_bought - 1e18
+    to_liquidity = remaining_supply * LIQUIDITY_PCT
+    to_treasury = remaining_supply * TREASURY_PCT
 
     assert (
         initial_supply
-        - Decimal(total_citadel_bought + to_treasury + to_liquidity + 1e18)
+        - (total_citadel_bought + to_treasury + to_liquidity + 1e18)
         < 3
     )
 
