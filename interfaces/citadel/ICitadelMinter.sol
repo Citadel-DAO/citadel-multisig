@@ -10,11 +10,6 @@ interface ICitadelMinter {
     event CitadelDistributionSplitSet(
         uint256 fundingBps,
         uint256 stakingBps,
-        uint256 lockingBps
-    );
-    event CitadelDistributionSplitSet(
-        uint256 fundingBps,
-        uint256 stakingBps,
         uint256 lockingBps,
         uint256 daoBps
     );
@@ -93,12 +88,6 @@ interface ICitadelMinter {
     function pause() external;
 
     function paused() external view returns (bool);
-
-    function setCitadelDistributionSplit(
-        uint256 _fundingBps,
-        uint256 _stakingBps,
-        uint256 _lockingBps
-    ) external;
 
     function setCitadelDistributionSplit(
         uint256 _fundingBps,
