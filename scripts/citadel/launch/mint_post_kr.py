@@ -167,7 +167,7 @@ def mint_launch():
     for epoch, rate in enumerate(RATES):
         governance.citadel.set_epoch_rate(epoch, rate)
 
-    governance.citadel.supply_schedule.setMintingStart(chain.time())
+    governance.citadel.supply_schedule.setMintingStartNow()
 
     treasury.print_snapshot()
     governance.post_safe_tx()
