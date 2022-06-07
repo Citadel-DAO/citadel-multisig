@@ -13,6 +13,7 @@ ADDRESSES_ETH = {
         "badger": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
         "citadel": "0x353a38c269A24aafb78Cd214c6E0668847Bb58FD",
         "xCTDL": "0x62624eB2BA4f60A7188214B88542F5772703D551",
+        "frax": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
         "wbtc": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
         "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
         "comp": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
@@ -60,7 +61,7 @@ ADDRESSES_ETH = {
         },
     },
     "chainlink": {
-        "btc_usd_feed": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",
+        "wbtc_usd_feed": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",
         "cvx_usd_feed": "0xd962fC30A72A84cE50161031391756Bf2876Af5D",
         "badger_usd_feed": "0x66a47b7206130e6FF64854EF0E1EDfa237E65339",
     },
@@ -172,7 +173,12 @@ def get_registry():
         return registry.rin
 
 
-r = get_registry()
+try:
+    r = get_registry()
+except AttributeError as e:
+    if str(e) == "'NoneType' object has no attribute 'request_func'":
+        # probably running brownie test where `chain.id` is not available yet
+        r = registry.eth
 
 # flatten nested dicts and invert the resulting key <-> value
 # this allows for reversed lookup of an address

@@ -37,7 +37,7 @@ def mint_launch():
     balance_checker = interface.IBalanceChecker(
         r.helpers.balance_checker, owner=governance.account
     )
-    wbtc_usdc_oracle = interface.IOracle(r.chainlink.btc_usd_feed)
+    wbtc_usdc_oracle = interface.IOracle(r.chainlink.wbtc_usd_feed)
     gac = governance.contract(r.citadel.gac)
     kr_array = [
         interface.IKnightingRound(addr, owner=governance.account)
@@ -130,7 +130,7 @@ def mint_launch():
 
     # assets transfers to vault from KRs
     for i in range(kr_array_len):
-        token_in = interface.IERC20(tokens_in[i], owner=governance.account)
+        token_in = interface.ERC20(tokens_in[i], owner=governance.account)
         token_in_bal = token_in.balanceOf(governance)
         if token_in_bal > 0:
             token_in.transfer(treasury, token_in_bal)
@@ -178,7 +178,7 @@ def _asset_price_limit_helper(asset, factor=FACTOR_PRICES):
 
     price = oracle.latestAnswer() / 10 ** oracle.decimals()
 
-    asset_decimal = Contract(r.tokens[asset]).decimals()
+    asset_decimal = interface.ERC20(r.tokens[asset]).decimals()
 
     token_out_per_token_in = _token_out_per_token_in(
         CITADEL_LAUNCH_DOLLAR_PRICE, price, asset_decimal
