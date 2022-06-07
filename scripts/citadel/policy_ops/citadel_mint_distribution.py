@@ -2,9 +2,7 @@ from great_ape_safe import GreatApeSafe
 from helpers.addresses import registry
 
 
-def set_mint_distribution(
-    funding_bps=5000, staking_bps=2500, locking_bps=1000, dao_bps=1500
-):
+def main(funding_bps=5000, staking_bps=2500, locking_bps=1000, dao_bps=1500):
     safe = GreatApeSafe(registry.eth.citadel.policy_ops)
     safe.init_citadel()
 
