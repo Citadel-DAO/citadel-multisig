@@ -69,13 +69,12 @@ def mint_launch():
 
     for i in range(kr_array_len):
         if citadatel_bougth_per_round[i] > 0:
-            ppfs = xCTDL.getPricePerFullShare() / 1e18
             xCTDL.depositFor(kr_array[i], citadatel_bougth_per_round[i])
             # we include ppfs here, cause on the test deployments alredy some `mintAndDistribute` occurred and ppfs is not 1:1
             balance_checker.verifyBalance(
                 xCTDL,
                 kr_array[i],
-                citadatel_bougth_per_round[i] / ppfs,
+                citadatel_bougth_per_round[i],
             )
 
     remaining_supply = initial_supply - Decimal(total_citadel_bought - 1e18)
