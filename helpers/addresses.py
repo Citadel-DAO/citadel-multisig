@@ -59,6 +59,12 @@ ADDRESSES_ETH = {
             "bveCVX": "0xA613175C21cF66EFca7Ab17F6F1E2A1119c02d59",
             "weth": "0xf12a18e985EAD24EB054324d20F81b0EAbA09e57",
         },
+        "oracles": {
+            "median_oracle_wbtc": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",  # TODO
+            "median_oracle_cvx": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",  # TODO
+            "median_oracle_badger": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",  # TODO
+        },
+        "atomic_launch_pool": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",  # TODO
     },
     "chainlink": {
         "wbtc_usd_feed": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",

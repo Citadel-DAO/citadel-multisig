@@ -132,3 +132,19 @@ class Citadel:
         epoch_length = self.supply_schedule.epochLength()
         self.supply_schedule.setEpochRate(epoch, rate / epoch_length)
         assert self.supply_schedule.epochRate(epoch) == rate / epoch_length
+
+    def initialize_funding(
+        self,
+        asset,
+        gac,
+        ctdl,
+        asset_address,
+        x_ctdl,
+        treasury,
+        oracle_address,
+        asset_cap,
+    ):
+        funding_pool = self.get_funding_contract(asset)
+        funding_pool.initialize(
+            gac, ctdl, asset_address, x_ctdl, treasury, oracle_address, asset_cap
+        )

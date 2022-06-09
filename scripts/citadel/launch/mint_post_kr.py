@@ -17,6 +17,7 @@ RATES = [
     558275000000000000000000,
     536986000000000000000000,
 ]
+ASSETS_CAP = {"wbtc": 100e8, "cvx": 100000e18, "badger": 100000e18}
 # prices asset limits is going to be 1/3x and 3x
 FACTOR_PRICES = 3
 
@@ -31,6 +32,7 @@ def mint_launch():
     ctdl = interface.ICitadel(r.tokens.citadel, owner=governance.account)
     xCTDL = governance.contract(r.tokens.xCTDL)
     lp_ctdl_wbtc = governance.contract(r.tokens.crvCtdlWbtc)
+    wbtc = governance.contract(r.tokens.wbtc)
 
     # contracts involved
     balance_checker = interface.IBalanceChecker(
@@ -38,6 +40,7 @@ def mint_launch():
     )
     wbtc_usdc_oracle = interface.IOracle(r.chainlink.wbtc_usd_feed)
     gac = governance.contract(r.citadel.gac)
+    pool_creation_contract = governance.contract(r.citadel.atomic_launch_pool)
     kr_array = [
         interface.IKnightingRound(addr, owner=governance.account)
         for addr in r.citadel.knighting_round.values()
@@ -81,9 +84,7 @@ def mint_launch():
     to_treasury = remaining_supply * TREASURY_PCT
 
     assert (
-        initial_supply
-        - (total_citadel_bought + to_treasury + to_liquidity + 1e18)
-        < 3
+        initial_supply - (total_citadel_bought + to_treasury + to_liquidity + 1e18) < 3
     )
 
     # seed xCitadel with 1 ctdl
@@ -94,37 +95,14 @@ def mint_launch():
     ctdl.transfer(treasury, to_treasury)
     balance_checker.verifyBalance(ctdl, treasury, to_treasury)
 
-    # ctdl/wbtc pool creation
-    # values ref: https://github.com/Citadel-DAO/citadel-contracts/blob/main/src/test/AtomicLaunchTest.t.sol#L349
+    # ctdl/wbtc pool creation & oracle setting will be handled by AtomicLaunch.sol contract
     wbtc_price = wbtc_usdc_oracle.latestAnswer() / 10 ** wbtc_usdc_oracle.decimals()
-    pool_deployed = governance.curve_v2.pool_deployment(
-        "CTDL/wBTC",  # name
-        "CTDL",  # symbol
-        [ctdl.address, r.tokens.wbtc],  # coins
-        400000,  # A
-        145000000000000,  # gamma
-        26000000,  # mid_fee
-        45000000,  # out_fee
-        2000000000000,  # allowed_extra_profit
-        230000000000000,  # fee_gamma
-        146000000000000,  # adjustment_step
-        5000000000,  # admin_fee
-        600,  # ma_half_time
-        (wbtc_price / CITADEL_LAUNCH_DOLLAR_PRICE)
-        * 1e18,  # initial_price ~$WBTC/$CTDL = X. denomiated in 18 decimals
-    )
-    pool_contract = governance.contract(pool_deployed)
-    pool_lp = interface.ICurveLP(pool_contract.token())
-
-    # add liquidity into curve factory pool prior
     wbtc_amount_per_ctdl = (CITADEL_LAUNCH_DOLLAR_PRICE / wbtc_price) * 1e18
     wbtc_liquidity = ((to_liquidity * wbtc_amount_per_ctdl) / 1e18) / 1e10
-    governance.curve_v2.deposit(
-        pool_lp, [to_liquidity, wbtc_liquidity], fresh_pool=True
-    )
 
-    balance_checker.verifyBalance(ctdl, pool_deployed, to_liquidity)
-    balance_checker.verifyBalance(r.tokens.wbtc, pool_deployed, wbtc_liquidity)
+    # sends wbtc & ctdl funds to contract
+    ctdl.transfer(pool_creation_contract, to_liquidity)
+    wbtc.transfer(pool_creation_contract, wbtc_liquidity)
 
     # assets transfers to vault from KRs
     for i in range(kr_array_len):
@@ -150,6 +128,16 @@ def mint_launch():
 
     funding_tokens = r.citadel.funding
     for asset in funding_tokens.keys():
+        governance.citadel.initialize_funding(
+            asset,
+            gac.address,
+            ctdl.address,
+            r.tokens[asset],
+            xCTDL.address,
+            treasury.address,
+            r.citadel.oracles[f"median_oracle_{asset}"],
+            ASSETS_CAP[asset],
+        )
         governance.citadel.set_discount_limits(asset, 0, MAX_DISCOUNT)
         governance.citadel.set_discount_manager(asset, r.citadel.discount_manager)
         min_price, max_price = _asset_price_limit_helper(asset)
