@@ -1,5 +1,7 @@
 from great_ape_safe import GreatApeSafe
 from helpers.addresses import r
+from helpers.constants import MaxUint256
+
 from brownie import interface
 
 # constants
@@ -17,7 +19,6 @@ RATES = [
     558275000000000000000000,
     536986000000000000000000,
 ]
-ASSETS_CAP = {"wbtc": 100e8, "cvx": 100000e18, "badger": 100000e18}
 # prices asset limits is going to be 1/3x and 3x
 FACTOR_PRICES = 3
 
@@ -40,7 +41,9 @@ def mint_launch():
     )
     wbtc_usdc_oracle = interface.IOracle(r.chainlink.wbtc_usd_feed)
     gac = governance.contract(r.citadel.gac)
-    pool_creation_contract = governance.contract(r.citadel.atomic_launch_pool)
+    pool_creation_contract = interface.IAtomicLaunch(
+        r.citadel.atomic_launch_pool, owner=governance.account
+    )
     kr_array = [
         interface.IKnightingRound(addr, owner=governance.account)
         for addr in r.citadel.knighting_round.values()
@@ -104,6 +107,8 @@ def mint_launch():
     ctdl.transfer(pool_creation_contract, to_liquidity)
     wbtc.transfer(pool_creation_contract, wbtc_liquidity)
 
+    pool_creation_contract.launch(to_liquidity, wbtc_liquidity)
+
     # assets transfers to vault from KRs
     for i in range(kr_array_len):
         token_in = interface.ERC20(tokens_in[i], owner=governance.account)
@@ -136,7 +141,7 @@ def mint_launch():
             xCTDL.address,
             treasury.address,
             r.citadel.oracles[f"median_oracle_{asset}"],
-            ASSETS_CAP[asset],
+            MaxUint256,  # NOTE: initial the plan is not cap
         )
         governance.citadel.set_discount_limits(asset, 0, MAX_DISCOUNT)
         governance.citadel.set_discount_manager(asset, r.citadel.discount_manager)
