@@ -26,6 +26,12 @@ class Citadel:
         self.citadel_minter = interface.ICitadelMinter(
             registry.eth.citadel.minter, owner=self.safe.account
         )
+        self.staked_citadel_locker = interface.IStakedCitadelLocker(
+            registry.eth.citadel.staked_citadel_locker, owner=self.safe.account
+        )
+        self.supply_schedule = interface.ISupplySchedule(
+            registry.eth.citadel.supply_schedule, owner=self.safe.account
+        )
 
     def get_funding_contract(self, asset):
         return interface.IFunding(
@@ -108,3 +114,37 @@ class Citadel:
     def get_asset_cap(self, asset):
         funding_pool = self.get_funding_contract(asset)
         return funding_pool.getFundingParams()[5]
+
+    def distribute_yield(self, asset, mantissa):
+        assert mantissa > 0
+        asset = interface.ERC20(asset, owner=self.safe.account)
+        asset.approve(self.staked_citadel_locker, mantissa)
+        self.staked_citadel_locker.notifyRewardAmount(
+            asset, mantissa, web3.solidityKeccak(["bytes32"], [b"treasury-yield"]).hex()
+        )
+
+    def set_discount_manager(self, asset, manager):
+        funding_contract = self.get_funding_contract(asset)
+        funding_contract.setDiscountManager(manager)
+        assert funding_contract.getFundingParams()[3] == manager
+
+    def set_epoch_rate(self, epoch, rate):
+        epoch_length = self.supply_schedule.epochLength()
+        self.supply_schedule.setEpochRate(epoch, rate / epoch_length)
+        assert self.supply_schedule.epochRate(epoch) == rate / epoch_length
+
+    def initialize_funding(
+        self,
+        asset,
+        gac,
+        ctdl,
+        asset_address,
+        x_ctdl,
+        treasury,
+        oracle_address,
+        asset_cap,
+    ):
+        funding_pool = self.get_funding_contract(asset)
+        funding_pool.initialize(
+            gac, ctdl, asset_address, x_ctdl, treasury, oracle_address, asset_cap
+        )

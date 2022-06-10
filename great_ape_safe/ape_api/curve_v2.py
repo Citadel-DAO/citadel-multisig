@@ -9,7 +9,7 @@ class CurveV2(Curve):
         self.safe = safe
 
         # tokens
-        self.crv = interface.ERC20(registry.eth.treasury_tokens.crv)
+        self.crv = interface.ERC20(registry.eth.tokens.crv)
 
         # contracts
         self.provider = safe.contract(registry.eth.curve.provider)
@@ -21,5 +21,5 @@ class CurveV2(Curve):
         self.factory_crypto_registry = safe.contract(registry.eth.curve.factory)
 
         # parameters
-        self.max_slippage_and_fees = .02
+        self.max_slippage_and_fees = 0.02
         self.is_v2 = True
