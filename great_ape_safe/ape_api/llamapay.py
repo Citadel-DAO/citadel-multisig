@@ -26,54 +26,59 @@ class LlamaPay:
         # https://github.com/LlamaPay/llamapay/blob/master/contracts/LlamaPay.sol#L16
         return int((amount * self.PRECISION) / seconds)
 
-    def get_pool(self, token):
-        pool_address, is_deployed = self.factory.getLlamaPayContractByToken(token)
+    def get_pool(self, token_address):
+        pool_address, is_deployed = self.factory.getLlamaPayContractByToken(
+            token_address
+        )
         if is_deployed:
             return interface.IPoolLlama(pool_address, owner=self.safe.account)
         else:
-            print(f" === Pool for token ({token}) has not being deployed === \n")
+            print(
+                f" === Pool for token ({token_address}) has not being deployed === \n"
+            )
 
-    def create_pool(self, token):
+    def create_pool(self, token_address):
         try:
             # deterministic: https://github.com/LlamaPay/llamapay/blob/master/contracts/LlamaPayFactory.sol#L26
-            self.factory.createLlamaPayContract(token)
+            self.factory.createLlamaPayContract(token_address)
         except exceptions.VirtualMachineError:
             # avoid revert GS013, if `createLlamaPayContract` cause pool already exist
             chain.reset()
             print(
-                f" === Pool exist already, address: {self.get_pool(token).address} === \n"
+                f" === Pool exist already, address: {self.get_pool(token_address).address} === \n"
             )
 
-    def deposit_funds(self, amount, token):
-        pool = self.get_pool(token)
+    def deposit_funds(self, amount, token_address):
+        pool = self.get_pool(token_address)
 
-        token_contract = interface.ERC20(token, owner=self.safe.account)
+        token = interface.ERC20(token_address, owner=self.safe.account)
 
-        amount_mantissa = amount * 10 ** token_contract.decimals()
+        amount_mantissa = amount * 10 ** token.decimals()
 
-        token_contract.approve(pool, amount_mantissa)
+        token.approve(pool, amount_mantissa)
 
         pool.deposit(amount_mantissa)
 
-    def withdraw_funds(self, amount, token, all_funds=False):
-        pool = self.get_pool(token)
+    def withdraw_funds(self, amount, token_address, all_funds=False):
+        pool = self.get_pool(token_address)
 
         if all_funds:
             pool.withdrawPayerAll()
         else:
+            token = interface.ERC20(token_address, owner=self.safe.account)
             amount_mantissa = amount * 10 ** token.decimals()
             pool.withdrawPayer(amount_mantissa)
 
-    def create_stream(self, recipient, amount, stream_days_duration, token):
-        pool = self.get_pool(token)
+    def create_stream(self, recipient, amount, stream_days_duration, token_address):
+        pool = self.get_pool(token_address)
 
         amount_per_sec = self._get_rate(amount, stream_days_duration)
 
         # https://github.com/LlamaPay/llamapay/blob/master/contracts/LlamaPay.sol#L91
         pool.createStream(recipient, amount_per_sec)
 
-    def cancel_stream(self, recipient, rate, token):
-        pool = self.get_pool(token)
+    def cancel_stream(self, recipient, rate, token_address):
+        pool = self.get_pool(token_address)
 
         # here we should have either a json saving events emitted by the stream creation
         # to grab the rate. similar for pausing and modifying...
