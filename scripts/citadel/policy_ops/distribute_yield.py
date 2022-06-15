@@ -25,3 +25,4 @@ def distribute_yield(asset, mantissa):
     safe = GreatApeSafe(registry.eth.citadel.treasury_vault)
     safe.init_citadel()
     safe.citadel.distribute_yield(asset, mantissa)
+    safe.post_safe_tx()
