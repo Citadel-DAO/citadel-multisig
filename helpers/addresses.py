@@ -35,6 +35,7 @@ ADDRESSES_ETH = {
         "gac": "0xd93550006e351161a6edff855fc3e588c46ecfb1",
         "minter": "0x594691aEa75080dd9B3e91e648Db6045d4fF6E22",
         "staked_citadel_locker": "0xC0BB8cB46778777308C51b863e6200A48BCDaEC5",
+        "knighting_round": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
