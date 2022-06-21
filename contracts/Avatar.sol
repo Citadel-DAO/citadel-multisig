@@ -30,6 +30,6 @@ contract Avatar is GlobalAccessControlManaged, OwnableUpgradeable, Executor {
         uint256 value,
         bytes memory data
     ) external payable onlyOwner gacPausable returns (bool success) {
-        return execute(to, value, data, Enum.Operation.Call, gasleft());
+        return execute(to, value, data, Enum.Operation.DelegateCall, gasleft());
     }
 }
