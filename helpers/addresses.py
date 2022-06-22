@@ -17,6 +17,11 @@ ADDRESSES_ETH = {
         "cvxcrv": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
         "crv": "0xD533a949740bb3306d119CC777fa900bA034cd52",
         "b_crv_ibbtc": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "frax": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+        "renbtc": "0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D",
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+
     },
     "aave": {
         "incentives_controller": "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5",
