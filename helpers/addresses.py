@@ -23,6 +23,7 @@ ADDRESSES_ETH = {
         "crv": "0xD533a949740bb3306d119CC777fa900bA034cd52",
         "b_crv_ibbtc": "0xaE96fF08771a109dc6650a1BdCa62F2d558E40af",
         "crvCtdlWbtc": "0xE2b11613bBe8E09F73fA81B4A09F0dadB20F5Df6",
+        "dai": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     },
     "aave": {
         "incentives_controller": "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5",
