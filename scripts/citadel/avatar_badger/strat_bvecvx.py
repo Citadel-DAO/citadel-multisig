@@ -1,4 +1,5 @@
-from brownie import Avatar, accounts, chain
+from brownie import Avatar, accounts
+from dotmap import DotMap
 from gnosis.safe.multi_send import MultiSend, MultiSendOperation, MultiSendTx
 
 from great_ape_safe import GreatApeSafe
@@ -24,8 +25,16 @@ def main():
     print(cvx.balanceOf(safe), cvx.balanceOf(avatar), bvecvx.balanceOf(avatar))
 
     avatar_todo = [
-        cvx.approve(bvecvx, cvx.balanceOf(avatar)),
-        bvecvx.depositAll()
+        DotMap({
+            'receiver': cvx.address,
+            'value': 0,
+            'input': cvx.approve.encode_input(bvecvx, cvx.balanceOf(avatar)),
+        }),
+        DotMap({
+            'receiver': bvecvx.address,
+            'value': 0,
+            'input': bvecvx.depositAll.encode_input()
+        })
     ]
 
     txs = [MultiSendTx(MultiSendOperation.CALL, tx.receiver, tx.value, tx.input) for tx in avatar_todo]
