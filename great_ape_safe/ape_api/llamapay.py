@@ -102,9 +102,6 @@ class LlamaPay:
         # so rate has to be provided if there are multiple streams for recipient
         # https://etherscan.io/address/0x60c7B0c5B3a4Dc8C690b074727a17fF7aA287Ff2#code#F1#L59
         if has_multiple_streams and not rate:
-            # print recipient streams & rates
-            console.print(f"{recipient} streams:")
-
             def monthly_rate(amount_per_sec):
                 return (Decimal(amount_per_sec["amountPerSec"]) * Decimal(2.628e6)) / self.PRECISION
 
