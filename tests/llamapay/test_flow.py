@@ -1,10 +1,10 @@
 import sys
 
-def test_create_and_withdraw_flow(safe, dai, usdc):
+def test_create_and_withdraw_flow(safe, usdc, payee):
     safe.init_llamapay()
 
     safe.llamapay.create_pool(usdc)
-    safe.llamapay.create_stream("0xa95ecbDc51082ED2a2D078a5dE5275777dD73347", 100, 30, usdc)
+    safe.llamapay.create_stream(payee, 100, 30, usdc)
 
     safe.llamapay.deposit_funds(1000, usdc)
 
