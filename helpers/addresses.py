@@ -25,6 +25,7 @@ ADDRESSES_ETH = {
     },
     "badger": {
         "tree": "0x660802Fc641b154aBA66a62137e71f331B6d787A",
+        "bvecvx": "0xfd05D3C7fe2924020620A8bE4961bBaA747e6305",
     },
     "citadel": {
         "deployer": "0xa967ba66fb284ec18bbe59f65bcf42dd11ba8128",
