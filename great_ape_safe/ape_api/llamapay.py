@@ -109,9 +109,7 @@ class LlamaPay:
 
             rate = click.prompt(
                     "Select monthly rate:",
-                    type=click.Choice(
-                        rates
-                    ),
+                    type=click.Choice(rates),
                     show_default=False,
                     value_proc=lambda x: int((Decimal(x) / Decimal(2.628e6)) * self.PRECISION)
                 )
