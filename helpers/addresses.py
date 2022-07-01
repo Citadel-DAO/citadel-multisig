@@ -44,6 +44,7 @@ ADDRESSES_ETH = {
         "minter": "0xB61979B68f6978FD3ab25ae1c8d54456EC37A39f",
         "staked_citadel_locker": "0x9f2819D2D9DE18e96c5d19cBe906d9E490E2dA5b",
         "supply_schedule": "0xDC17DBDb91E874e40158984606BD308213c99803",
+        "knighting_round": "0x366f3e96c7a1dC97C261Ffc5119dD9C2A477860E",
         "funding": {
             "wbtc": "0x2559F79Ffd2b705083A5a23f1fAB4bB03C491435",
             "cvx": "0x40927b7bc37380b73DBB60b75d6D5EA308Ec2590",
