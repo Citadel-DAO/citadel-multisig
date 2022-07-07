@@ -2,7 +2,7 @@ from decimal import Decimal
 from brownie import interface
 
 from helpers.addresses import r
-from great_ape_safe.ape_api.helpers.llamapay.queries import construct_query
+from great_ape_safe.ape_api.helpers.llamapay.queries import stream_query
 
 from datetime import timedelta
 import requests
@@ -31,7 +31,10 @@ class LlamaPay:
 
     def get_safe_streams(self):
         # get all streams from safe from subgraph
-        res = requests.post(self.subgraph, json={"query": construct_query(self.safe.address)})
+        res = requests.post(
+            self.subgraph, 
+            json={"query": stream_query.format(self.safe.address.lower())}
+        )
         streams = res.json()["data"]["user"]["streams"]
         streams = [x for x in streams if x["active"]]
         return streams

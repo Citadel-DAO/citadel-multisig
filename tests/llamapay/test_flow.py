@@ -1,8 +1,6 @@
 import sys
 
 def test_create_and_withdraw_flow(safe, usdc, payee):
-    safe.init_llamapay()
-
     safe.llamapay.create_pool(usdc)
     safe.llamapay.create_stream(payee, 100, 30, usdc)
 
@@ -12,7 +10,6 @@ def test_create_and_withdraw_flow(safe, usdc, payee):
     safe.llamapay.withdraw_funds(0, usdc, all_funds=True)
 
 def test_subgraph(safe):
-    safe.init_llamapay()
     assert len(safe.llamapay.streams) > 0
 
     stream = safe.llamapay.streams[0] 
@@ -21,7 +18,6 @@ def test_subgraph(safe):
     assert stream['payee']['address']
 
 def test_cancel_stream(safe, dai, payee):
-    safe.init_llamapay()
     safe.llamapay.cancel_stream(payee, dai, rate=385802469135802469)
 
 def test_cancel_stream_no_rate(safe, dai, payee2):

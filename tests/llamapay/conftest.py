@@ -6,7 +6,9 @@ from helpers.addresses import r
 
 @pytest.fixture
 def safe():
-    return GreatApeSafe('ychad.eth')
+    safe =  GreatApeSafe('ychad.eth')
+    safe.init_llamapay()
+    return safe
 
 @pytest.fixture
 def dai(safe):
