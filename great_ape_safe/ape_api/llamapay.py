@@ -30,14 +30,16 @@ class LlamaPay:
         self.streams = self.get_safe_streams()
 
     def get_safe_streams(self):
-        # get all streams from safe from subgraph
+        # get all streams for safe from subgraph
         res = requests.post(
             self.subgraph, 
             json={"query": stream_query.format(self.safe.address.lower())}
         )
         streams = res.json()["data"]["user"]["streams"]
-        streams = [x for x in streams if x["active"]]
-        return streams
+        return [x for x in streams if x["active"]]
+    
+    def streams_for(self, recipient):
+        return [x for x in self.streams if x["payee"]["address"] == recipient]
 
     def _get_rate(self, amount, stream_days_duration):
         seconds = int(timedelta(days=stream_days_duration).total_seconds())
@@ -87,44 +89,47 @@ class LlamaPay:
         # https://github.com/LlamaPay/llamapay/blob/master/contracts/LlamaPay.sol#L91
         pool.createStream(recipient, amount_per_sec)
 
-    def cancel_stream(self, recipient, token_address, rate=None, update_streams=False):
-        if update_streams:
-            self.streams = self.get_safe_streams()
-
-        assert len(self.streams) > 0, "No streams to cancel"
-
+    def cancel_stream(self, recipient, token_address, rate=None, use_subgraph=True):
         pool = self.get_pool(token_address)
-        recipient = recipient.lower()
 
-        num_recipient_streams = [x["payee"]["address"] for x in self.streams].count(recipient)
-        assert num_recipient_streams > 0, "No streams to cancel"
-    
-        has_multiple_streams = num_recipient_streams > 1
+        if not use_subgraph:
+            assert rate, "Rate is required"
+            pool.cancelStream(recipient, rate)
 
-        # a "unique" stream for pool is derived from payer, payee and rate
-        # so rate has to be provided if there are multiple streams for recipient
-        # https://etherscan.io/address/0x60c7B0c5B3a4Dc8C690b074727a17fF7aA287Ff2#code#F1#L59
-        if has_multiple_streams and not rate:
-            def monthly_rate(amount_per_sec):
-                return (Decimal(amount_per_sec["amountPerSec"]) * Decimal(2.628e6)) / self.PRECISION
+        else:
+            assert len(self.streams) > 0, "No streams to cancel"
 
-            rates = [monthly_rate(x) for x in self.streams if x["payee"]["address"] == recipient]
+            recipient = recipient.lower()
 
-            rate = click.prompt(
-                    "Select monthly rate:",
-                    type=click.Choice(rates),
-                    show_default=False,
-                    value_proc=lambda x: int((Decimal(x) / Decimal(2.628e6)) * self.PRECISION)
-                )
+            num_recipient_streams = len(self.streams_for(recipient))
+            assert num_recipient_streams > 0, "No streams to cancel"
 
-        for stream in self.streams:
-            if stream["payee"]["address"] == recipient:
-                queried_rate = int(stream["amountPerSec"])
-                if not rate:
-                    pool.cancelStream(recipient, queried_rate)
-                    return
-                if rate == queried_rate:
-                    pool.cancelStream(recipient, rate)
-                    return
-    
-        raise Exception(f"No stream found for {recipient}")
+            has_multiple_streams = num_recipient_streams > 1
+
+            # a "unique" stream for pool is derived from payer, payee and rate
+            # so rate has to be provided if there are multiple streams for recipient
+            # https://etherscan.io/address/0x60c7B0c5B3a4Dc8C690b074727a17fF7aA287Ff2#code#F1#L59
+            if has_multiple_streams and not rate:
+                def monthly_rate(amount_per_sec):
+                    return (Decimal(amount_per_sec["amountPerSec"]) * Decimal(2.628e6)) / self.PRECISION
+
+                rates = [monthly_rate(x) for x in self.streams if x["payee"]["address"] == recipient]
+
+                rate = click.prompt(
+                        "Select monthly rate:",
+                        type=click.Choice(rates),
+                        show_default=False,
+                        value_proc=lambda x: int((Decimal(x) / Decimal(2.628e6)) * self.PRECISION)
+                    )
+
+            for stream in self.streams:
+                if stream["payee"]["address"] == recipient:
+                    queried_rate = int(stream["amountPerSec"])
+                    if not rate:
+                        pool.cancelStream(recipient, queried_rate)
+                        return
+                    if rate == queried_rate:
+                        pool.cancelStream(recipient, rate)
+                        return
+        
+            raise Exception(f"No stream found for {recipient}")
