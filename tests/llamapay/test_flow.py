@@ -29,5 +29,6 @@ def test_cancel_stream_no_rate(safe, dai, payee2):
     # requires user input, only run if called with -s
     if '-s' in sys.argv:
         safe.init_llamapay()
-        safe.llamapay.cancel_stream(payee2, dai)
+        if len(safe.llamapay.streams_for(payee2)) > 0:
+            safe.llamapay.cancel_stream(payee2, dai)
 
