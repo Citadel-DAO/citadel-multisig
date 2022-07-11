@@ -38,4 +38,3 @@ def test_cancel_stream_no_rate(safe, dai, payee2):
             safe.llamapay.cancel_stream(payee2, dai)
         else:
             warnings.warn(f"No active dai streams for {payee2}")
-

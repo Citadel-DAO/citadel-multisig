@@ -100,8 +100,6 @@ class LlamaPay:
             pool.cancelStream(recipient, rate)
 
         else:
-            assert len(self.streams) > 0, "No streams to cancel"
-
             recipient = recipient.lower()
 
             num_recipient_streams = len(self.streams_for(recipient, token=token_address))
