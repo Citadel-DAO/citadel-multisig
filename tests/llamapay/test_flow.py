@@ -25,7 +25,7 @@ def test_subgraph(safe):
 def test_cancel_stream_subgraph(safe, dai, payee):
     streams = safe.llamapay.streams_for(payee, token=dai)
     if len(streams) == 0:
-        warnings.warn(f"No active streams for {payee}")
+        warnings.warn(f"No active dai streams for {payee}")
 
     for stream in streams:
         safe.llamapay.cancel_stream(payee, dai, rate=int(stream['amountPerSec']))
@@ -34,8 +34,8 @@ def test_cancel_stream_no_rate(safe, dai, payee2):
     # requires user input, only run if called with -s
     if '-s' in sys.argv:
         safe.init_llamapay()
-        if len(safe.llamapay.streams_for(payee2)) > 0:
+        if len(safe.llamapay.streams_for(payee2, token=dai)) > 0:
             safe.llamapay.cancel_stream(payee2, dai)
         else:
-            warnings.warn(f"No active streams for {payee2}")
+            warnings.warn(f"No active dai streams for {payee2}")
 
