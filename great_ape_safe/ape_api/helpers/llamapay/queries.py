@@ -6,6 +6,9 @@ stream_query = \
                     active
                     streamId
                     amountPerSec
+                    token {{
+                        address
+                    }}
                     payee {{
                         address
                     }}

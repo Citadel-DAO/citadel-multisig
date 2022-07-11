@@ -38,8 +38,11 @@ class LlamaPay:
         streams = res.json()["data"]["user"]["streams"]
         return [x for x in streams if x["active"]]
     
-    def streams_for(self, recipient):
-        return [x for x in self.streams if x["payee"]["address"] == recipient]
+    def streams_for(self, recipient, token=None):
+        streams = [x for x in self.streams if x["payee"]["address"] == recipient.lower()]
+        if token:
+            streams = [x for x in streams if x["token"]['address'] == token.address.lower()]
+        return streams
 
     def _get_rate(self, amount, stream_days_duration):
         seconds = int(timedelta(days=stream_days_duration).total_seconds())
@@ -101,7 +104,7 @@ class LlamaPay:
 
             recipient = recipient.lower()
 
-            num_recipient_streams = len(self.streams_for(recipient))
+            num_recipient_streams = len(self.streams_for(recipient, token=token_address))
             assert num_recipient_streams > 0, "No streams to cancel"
 
             has_multiple_streams = num_recipient_streams > 1
